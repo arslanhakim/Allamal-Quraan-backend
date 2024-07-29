@@ -16,10 +16,12 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow requests from this origin
+    origin: "*", // Allow requests from this origin
     methods: ["GET", "POST"], // Allow these HTTP methods
   })
 );
+
+app.options("*", cors());
 
 // MongoDB connection
 const mongoURI =
