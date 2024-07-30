@@ -6,7 +6,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 // Models
-const Contact = require("./models/Contact"); // Fixed typo here
+const Contact = require("./models/Contact");
 const Client = require("./models/Client");
 const Instructor = require("./models/Instructor");
 
@@ -19,8 +19,8 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://your-frontend-domain.com", "*"], // Allow requests from this origin
-    methods: ["GET", "POST"], // Allow these HTTP methods
+    origin: ["http://localhost:5173", "https://your-frontend-domain.com", "*"],
+    methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"],
   })
 );
 
@@ -48,12 +48,13 @@ app.post("/send", async (req, res) => {
 
   // Save to MongoDB
   const contact = new Contact(req.body);
-  // try {
-  //   await contact.save();
-  // } catch (err) {
-  //   console.log("Error saving to MongoDB:", err);
-  //   return res.status(500).send("Internal Server Error");
-  // }
+  try {
+    console.log("mongodb connection");
+    await contact.save();
+  } catch (err) {
+    console.log("Error saving to MongoDB:", err);
+    return res.status(500).send("Internal Server Error");
+  }
 
   // Send email
   const transporter = nodemailer.createTransport({
@@ -84,13 +85,6 @@ app.post("/send", async (req, res) => {
     if (error) {
       console.log("welcome error");
       console.log("Error sending email:", error);
-      return res.status(500).send("Internal Server Error");
-    }
-    try {
-      console.log("welcome to mongo db");
-      contact.save();
-    } catch (err) {
-      console.log("Error saving to MongoDB:", err);
       return res.status(500).send("Internal Server Error");
     }
 
