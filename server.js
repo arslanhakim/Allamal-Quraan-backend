@@ -19,7 +19,7 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "*", // Allow requests from this origin
+    origin: ["http://localhost:5173", "https://your-frontend-domain.com", "*"], // Allow requests from this origin
     methods: ["GET", "POST"], // Allow these HTTP methods
   })
 );
