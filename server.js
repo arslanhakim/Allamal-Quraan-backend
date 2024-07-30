@@ -6,12 +6,15 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 // Models
-const Contact = require("./models/Contact");
+const Contact = require("./models/Contact"); // Fixed typo here
 const Client = require("./models/Client");
 const Instructor = require("./models/Instructor");
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Serve static files from the public directory
+app.use(express.static("public"));
 
 app.use(bodyParser.json());
 app.use(
@@ -23,6 +26,9 @@ app.use(
 
 app.options("*", cors());
 
+// Handle favicon requests
+app.get("/favicon.ico", (req, res) => res.status(204));
+
 // MongoDB connection
 const mongoURI =
   "mongodb+srv://arslanhaakim:epaECryNaHsLLV8m@cluster0.phkh3mz.mongodb.net/mydb";
@@ -30,6 +36,11 @@ mongoose
   .connect(mongoURI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
+
+// Define a route for the root URL
+app.get("/", (req, res) => {
+  res.send("Welcome to the server!");
+});
 
 // Endpoint to handle contact form submission
 app.post("/send", async (req, res) => {
@@ -57,7 +68,7 @@ app.post("/send", async (req, res) => {
 
   const mailOptions = {
     from: process.env.EMAIL,
-    to: process.env.EMAIL_T0,
+    to: process.env.EMAIL_TO,
     subject: "Allamal Quraan: New Contact Form Submission",
     text: `
       Name: ${name}
