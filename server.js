@@ -18,13 +18,14 @@ app.use(express.static("public"));
 
 app.use(bodyParser.json());
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://allamalquraan.com"],
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://allamalquraan.com"],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.options("*", cors());
 
