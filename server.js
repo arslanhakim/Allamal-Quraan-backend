@@ -30,8 +30,7 @@ app.options("*", cors());
 app.get("/favicon.ico", (req, res) => res.status(204));
 
 // MongoDB connection
-const mongoURI =
-  "mongodb+srv://arslanhaakim:epaECryNaHsLLV8m@cluster0.phkh3mz.mongodb.net/mydb";
+const mongoURI = process.env.MONGO_URI;
 mongoose
   .connect(mongoURI)
   .then(() => console.log("MongoDB connected"))
@@ -44,16 +43,17 @@ app.get("/", (req, res) => {
 
 // Endpoint to handle contact form submission
 app.post("/send", async (req, res) => {
+  console.log("welcome to the server");
   const { name, email, phone, message } = req.body;
 
   // Save to MongoDB
   const contact = new Contact(req.body);
-  try {
-    await contact.save();
-  } catch (err) {
-    console.log("Error saving to MongoDB:", err);
-    return res.status(500).send("Internal Server Error");
-  }
+  // try {
+  //   await contact.save();
+  // } catch (err) {
+  //   console.log("Error saving to MongoDB:", err);
+  //   return res.status(500).send("Internal Server Error");
+  // }
 
   // Send email
   const transporter = nodemailer.createTransport({
@@ -79,10 +79,21 @@ app.post("/send", async (req, res) => {
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
+    console.log("email sending to", process.env.EMAIL_TO);
+    console.log("welcome mail");
     if (error) {
+      console.log("welcome error");
       console.log("Error sending email:", error);
       return res.status(500).send("Internal Server Error");
     }
+    try {
+      console.log("welcome to mongo db");
+      contact.save();
+    } catch (err) {
+      console.log("Error saving to MongoDB:", err);
+      return res.status(500).send("Internal Server Error");
+    }
+
     console.log("Email sent: " + info.response);
     res.status(200).send("Email sent successfully!");
   });
