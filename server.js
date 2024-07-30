@@ -21,8 +21,8 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://allamalquraan.com"],
-    methods: ["GET", "POST"],
-    optionsSuccessStatus: 204,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
