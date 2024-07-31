@@ -19,7 +19,7 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: "*",
+  origin: "https://allamalquraan.com/",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200,
