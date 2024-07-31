@@ -6,9 +6,9 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 // Models
-const Contact = require("./models/Contact");
-const Client = require("./models/Client");
-const Instructor = require("./models/Instructor");
+const Contact = require("../models/Contact");
+const Client = require("../models/Client");
+const Instructor = require("../models/Instructor");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,7 +30,12 @@ app.use(cors(corsOptions));
 app.options("*", cors());
 
 // Handle favicon requests
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/public/favicon.ico", (req, res) => res.status(204));
+
+app.use((err, req, res, next) => {
+  console.error("Global error handler:", err);
+  res.status(500).send("Something went wrong!");
+});
 
 // MongoDB connection
 const mongoURI = process.env.MONGO_URI;
@@ -98,9 +103,16 @@ app.post("/send", async (req, res) => {
 
 // Other endpoints
 app.post("/api/contacts", async (req, res) => {
-  const contact = new Contact(req.body);
-  await contact.save();
-  res.status(201).send(contact);
+  console.log("Request headers:", req.headers);
+  console.log("Request body:", req.body);
+  try {
+    const contact = new Contact(req.body);
+    await contact.save();
+    res.status(201).send(contact);
+  } catch (err) {
+    console.error("Error fetching contacts:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.post("/api/clients", async (req, res) => {
@@ -116,6 +128,8 @@ app.post("/api/instructors", async (req, res) => {
 });
 
 app.get("/api/contacts", async (req, res) => {
+  console.log("Request headers:", req.headers);
+  console.log("Request body:", req.body);
   try {
     const contacts = await Contact.find();
     res.json(contacts);
@@ -127,3 +141,5 @@ app.get("/api/contacts", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
