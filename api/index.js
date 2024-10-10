@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
   // origin: ["https://allamalquraan.com", "http://localhost:5173"],
-  origin: ["*"],
+  origin: "*",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200,
